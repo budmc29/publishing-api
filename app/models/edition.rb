@@ -230,6 +230,21 @@ class Edition < ApplicationRecord
     Plek.current.website_root + base_path
   end
 
+  # @FIXME this is only supposed to be in for temporarily changing of date fields
+  def new_dates_valid?
+    within_1_sec = -> (date_a, date_b) do
+      return true if date_a == date_b
+      return false if [date_a, date_b].include?(nil)
+      diff = (date_b.to_f * 1000).to_i - (date_a.to_f * 1000).to_i
+      diff.abs > 1000
+    end
+
+    first_published_at_valid = within_1_sec.(first_published_at, (publisher_first_published_at || temporary_first_published_at))
+    public_updated_at_valid = within_1_sec.(public_updated_at, (publisher_major_published_at || major_published_at))
+    last_edited_at_valid = last_edited_at_valid.nil? || within_1_sec.(last_edited_at, (publisher_last_edited_at || temporary_last_edited_at))
+    first_published_at_valid && public_updated_at_valid && last_edited_at_valid
+  end
+
 private
 
   def renderable_content?
