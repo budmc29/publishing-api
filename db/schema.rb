@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171030153415) do
+ActiveRecord::Schema.define(version: 20171107172507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,7 +37,6 @@ ActiveRecord::Schema.define(version: 20171030153415) do
     t.text "edition_diff"
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["event_id"], name: "index_actions_on_event_id"
-    t.index ["link_set_id"], name: "index_actions_on_link_set_id"
   end
 
   create_table "change_notes", id: :serial, force: :cascade do |t|
@@ -92,21 +91,7 @@ ActiveRecord::Schema.define(version: 20171030153415) do
     t.datetime "publisher_major_published_at"
     t.datetime "publisher_published_at"
     t.datetime "publisher_last_edited_at"
-    t.index ["base_path", "content_store"], name: "index_editions_on_base_path_and_content_store", unique: true
-    t.index ["created_at", "id"], name: "index_editions_on_created_at_and_id"
-    t.index ["document_id", "content_store"], name: "index_editions_on_document_id_and_content_store", unique: true
-    t.index ["document_id", "state"], name: "index_editions_on_document_id_and_state"
-    t.index ["document_id", "user_facing_version"], name: "index_editions_on_document_id_and_user_facing_version", unique: true
     t.index ["document_id"], name: "index_editions_on_document_id"
-    t.index ["document_type", "updated_at"], name: "index_editions_on_document_type_and_updated_at"
-    t.index ["last_edited_at"], name: "index_editions_on_last_edited_at"
-    t.index ["public_updated_at", "id"], name: "index_editions_on_public_updated_at_and_id"
-    t.index ["public_updated_at"], name: "index_editions_on_public_updated_at"
-    t.index ["publishing_app"], name: "index_editions_on_publishing_app"
-    t.index ["rendering_app"], name: "index_editions_on_rendering_app"
-    t.index ["state", "base_path"], name: "index_editions_on_state_and_base_path"
-    t.index ["updated_at", "id"], name: "index_editions_on_updated_at_and_id"
-    t.index ["updated_at"], name: "index_editions_on_updated_at"
   end
 
   create_table "events", id: :serial, force: :cascade do |t|
@@ -117,7 +102,6 @@ ActiveRecord::Schema.define(version: 20171030153415) do
     t.datetime "updated_at"
     t.string "request_id"
     t.uuid "content_id"
-    t.index ["content_id"], name: "index_events_on_content_id"
   end
 
   create_table "expanded_links", force: :cascade do |t|
@@ -158,12 +142,6 @@ ActiveRecord::Schema.define(version: 20171030153415) do
     t.datetime "updated_at", null: false
     t.integer "position", default: 0, null: false
     t.integer "edition_id"
-    t.index ["edition_id"], name: "index_links_on_edition_id"
-    t.index ["link_set_id", "target_content_id"], name: "index_links_on_link_set_id_and_target_content_id"
-    t.index ["link_set_id"], name: "index_links_on_link_set_id"
-    t.index ["link_type"], name: "index_links_on_link_type"
-    t.index ["target_content_id", "link_type"], name: "index_links_on_target_content_id_and_link_type"
-    t.index ["target_content_id"], name: "index_links_on_target_content_id"
   end
 
   create_table "path_reservations", id: :serial, force: :cascade do |t|
@@ -171,7 +149,6 @@ ActiveRecord::Schema.define(version: 20171030153415) do
     t.string "publishing_app", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["base_path"], name: "index_path_reservations_on_base_path", unique: true
   end
 
   create_table "unpublishings", id: :serial, force: :cascade do |t|
@@ -183,7 +160,6 @@ ActiveRecord::Schema.define(version: 20171030153415) do
     t.datetime "updated_at"
     t.datetime "unpublished_at"
     t.json "redirects"
-    t.index ["edition_id", "type"], name: "index_unpublishings_on_edition_id_and_type"
     t.index ["edition_id"], name: "index_unpublishings_on_edition_id"
   end
 
