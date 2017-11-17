@@ -24,10 +24,12 @@ private
 
     # Requeue is considered a different event_type to major, minor etc
     # because we don't want to send additional email alerts to users.
-    service.send_message(
-      queue_payload,
-      routing_key: "#{edition.schema_name}.bulk.reindex",
-      persistent: false
-    )
+    if edition.base_path == '/hmrc-internal-manuals/inheritance-tax-manual/ihtm34071'
+      service.send_message(
+        queue_payload,
+        routing_key: "#{edition.schema_name}.bulk.reindex",
+        persistent: false
+      )
+    end
   end
 end
